@@ -8,57 +8,57 @@ public class TicTacToe {
 	public static void main(String args[]) {
 		// the board variable is an NxN (given by the 'dim' parameter)
 		// multidimensional array of the current game board.
-    	// 
-    	// Values: 	0 - Empty space
-    	//			1 - Users space ("X")
-    	//			2 - Computers space ("O")
-    	//
-    	// For example, if the board was:
-    	//		e X O
-    	//		X O e
-    	//		O O X
-    	// then then array would be:
-    	//		{{0,1,2},{1,2,0},{2,2,1}}
-    	//
-    	int[][] board = new int[dim][dim];
-
-    	String rawInput;
+		// 
+		// Values: 	0 - Empty space
+		//			1 - Users space ("X")
+		//			2 - Computers space ("O")
+		//
+		// For example, if the board was:
+		//		e X O
+		//		X O e
+		//		O O X
+		// then then array would be:
+		//		{{0,1,2},{1,2,0},{2,2,1}}
+		//
+		int[][] board = new int[dim][dim];
+		
+		String rawInput;
 		int[] input = {0, 0};
 		int computerTurn;
 		boolean quit = false;
-    	
-    	// main game loop
-    	while (true) {
-    		printBoard(board);
-    		
-    		// get input and check it ------------------------
-    		System.out.println("Enter the next \"X\" location (<row 1-" + dim + "> <col 1-" + dim + ">): ");
-    		rawInput = sc.nextLine();	
-    		if ( !checkInput(rawInput, input) )
-    			continue;
-    		// -----------------------------------------------
-    		
-    		// check if this space is available
-    		if ( !isOpen(board, input) )
-    			continue;
-    		
-    		board[input[0]][input[1]] = 1;
-    		
-    		if ( isTie(board) )
-    		{
-    			System.out.println("It's a tie!");
-    			break;
-    		}
-    		
-    		if ( isWin(board, 0) )
-    		{
-    			System.out.println("Congratulations! You win!");
-    			break;
-    		}
-    		
-    		computerTurn = computerTurn(board);
-    		
-    		switch (computerTurn) {
+		
+		// main game loop
+		while (true) {
+			printBoard(board);
+			
+			// get input and check it ------------------------
+			System.out.println("Enter the next \"X\" location (<row 1-" + dim + "> <col 1-" + dim + ">): ");
+			rawInput = sc.nextLine();	
+			if ( !checkInput(rawInput, input) )
+				continue;
+			// -----------------------------------------------
+			
+			// check if this space is available
+			if ( !isOpen(board, input) )
+				continue;
+			
+			board[input[0]][input[1]] = 1;
+			
+			if ( isTie(board) )
+			{
+				System.out.println("It's a tie!");
+				break;
+			}
+			
+			if ( isWin(board, 0) )
+			{
+				System.out.println("Congratulations! You win!");
+				break;
+			}
+			
+			computerTurn = computerTurn(board);
+			
+			switch (computerTurn) {
 				case -1:
 					System.out.println("It's a tie!");
 					quit = true;
@@ -69,14 +69,13 @@ public class TicTacToe {
 					break;
 				default:
 					break;
-    		}
-    		if ( quit )
-    			break;
-    		
-    	}
-    	System.out.println("\nFinal board:");
-    	printBoard(board);
-    }
+			}
+			if ( quit )
+				break;
+		}
+		System.out.println("\nFinal board:");
+		printBoard(board);
+	}
     
     //-----------------------------------------------------------
 	// This function checks if the player given by 'player' input
