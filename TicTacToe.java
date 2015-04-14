@@ -77,7 +77,7 @@ public class TicTacToe {
 		printBoard(board);
 	}
     
-    //-----------------------------------------------------------
+	//-----------------------------------------------------------
 	// This function checks if the player given by 'player' input
 	// won the game.
 	//
@@ -90,7 +90,6 @@ public class TicTacToe {
 	// Returns:
 	//		True  - 'player' won
 	//		False - 'player' didn't win
-	//
 	//-----------------------------------------------------------
     public static boolean isWin(int[][] board, int player)
     {
@@ -160,7 +159,6 @@ public class TicTacToe {
 	// Returns:
 	//		True  - tie
 	//		False - not a tie
-	//
 	//-----------------------------------------------------------
     public static boolean isTie(int[][] board)
     {
@@ -218,31 +216,30 @@ public class TicTacToe {
 	//		 1 - computer won
 	//		 0 - computer didn't win
 	//		-1 - tie game
-	//
 	//-----------------------------------------------------------
 	public static int computerTurn(int[][] board)
 	{
 		int[] coord = {0, 0};
 		boolean canWin = false;
-	
+		
 		// first check if computer can win
 		if ( isOneAway(board, coord, 2) )
-    	{
-    		board[coord[0]][coord[1]] = 2;
-    		return 1;
-    	}
-    	
-    	// then check if computer can block user from winning
-    	if ( isOneAway(board, coord, 1) )
-    		board[coord[0]][coord[1]] = 2;
-    	// finally, make a move for the computer
-    	else
-    		computerMove(board, coord);
-    	
-    	if ( isTie(board) )
-    		return -1; 
-    	else
-    		return 0;
+		{
+			board[coord[0]][coord[1]] = 2;
+			return 1;
+		}
+		
+		// then check if computer can block user from winning
+		if ( isOneAway(board, coord, 1) )
+			board[coord[0]][coord[1]] = 2;
+		// finally, make a move for the computer
+		else
+			computerMove(board, coord);
+		
+		if ( isTie(board) )
+			return -1; 
+		else
+			return 0;
 	}
 	
 	//-----------------------------------------------------------
@@ -253,7 +250,6 @@ public class TicTacToe {
 	// Input: 
 	//		board - gameboard array. see board variable in main.
 	//		coord - the space that the computer will play.
-	//
 	//-----------------------------------------------------------
 	public static void computerMove(int[][] board, int[] coord)
 	{
