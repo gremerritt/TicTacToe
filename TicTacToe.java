@@ -4,9 +4,10 @@ import java.util.Random;
 public class TicTacToe {
 	static Scanner sc = new Scanner(System.in);
 	public static final int dim = 3;
-
-    public static void main(String args[]) {
-    	// the board variable is a 3x3 multidimensional array of the current game board.
+	
+	public static void main(String args[]) {
+		// the board variable is an NxN (given by the 'dim' parameter)
+		// multidimensional array of the current game board.
     	// 
     	// Values: 	0 - Empty space
     	//			1 - Users space ("X")
