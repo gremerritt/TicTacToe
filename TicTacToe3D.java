@@ -828,7 +828,6 @@ public class TicTacToe3D {
 
 	//-----------------------------------------------------------
 	// This function prints the current game board
-	//
 	//-----------------------------------------------------------
     public static void printBoard(int[][][] board)
     {
