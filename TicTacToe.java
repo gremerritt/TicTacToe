@@ -41,10 +41,10 @@ public class TicTacToe {
 			// -----------------------------------------------
 			
 			// check if this space is available
-			if ( !isOpen(board, input, location) )
+			if ( !isOpen(board, input) )
 				continue;
 			
-			board[ location[ 0 ] ][ location[ 1 ] ] = 1;
+			makeMove(board, input, 1);
 			
 			if ( isTie(board) )
 			{
@@ -59,24 +59,29 @@ public class TicTacToe {
 			}
 			
 			computerTurn = computerTurn(board);
+			makeMove(board, computerTurn, 2);
 			
-			switch (computerTurn) {
-				case -1:
-					System.out.println("It's a tie!");
-					quit = true;
-					break;
-				case 1:
-					System.out.println("Uh oh! You lost.");
-					quit = true;
-					break;
-				default:
-					break;
-			}
-			if ( quit )
+			if ( isTie(board) )
+			{
+				System.out.println("It's a tie!");
 				break;
+			}
+			
+			if ( isWin(board, 1) )
+			{
+				System.out.println("Uh oh! You lost.");
+				break;
+			}
 		}
 		System.out.println("\nFinal board:");
 		printBoard(board);
+	}
+	
+	public static void makeMove(int[][] board, int square, int player)
+	{
+		int location[] = new int[ 2 ];
+		boxNumToArray(square, location);
+		board[ location[ 0 ] ][ location[ 1 ] ] = player;
 	}
     
 	//-----------------------------------------------------------
@@ -215,33 +220,18 @@ public class TicTacToe {
 	//		board - gameboard array. see board variable in main.
 	//
 	// Returns:
-	//		 1 - computer won
-	//		 0 - computer didn't win
-	//		-1 - tie game
+	//		square that the computer will play
 	//-----------------------------------------------------------
 	public static int computerTurn(int[][] board)
 	{
 		int[] coord = {0, 0};
-		boolean canWin = false;
 		
-		// first check if computer can win
-		if ( isOneAway(board, coord, 2) )
-		{
-			board[coord[0]][coord[1]] = 2;
-			return 1;
-		}
+		// check if computer can win or block user from winning
+		if ( ( isOneAway(board, coord, 2) ) ||  ( isOneAway(board, coord, 1) ) )
+			return boxArrayToNum( coord );
 		
-		// then check if computer can block user from winning
-		if ( isOneAway(board, coord, 1) )
-			board[coord[0]][coord[1]] = 2;
-		// finally, make a move for the computer
-		else
-			computerMove(board, coord);
-		
-		if ( isTie(board) )
-			return -1; 
-		else
-			return 0;
+		computerMove(board, coord);
+		return boxArrayToNum( coord );
 	}
 	
 	//-----------------------------------------------------------
@@ -465,12 +455,16 @@ public class TicTacToe {
     	if ( bestSpotsLength == 0 )
     	{
     		randomNum = rand.nextInt(availableSpotsLength);		// this gets a random number between 0 and availableSpotsLength
-    		board[availableSpots[randomNum][0]][availableSpots[randomNum][1]] = 2;
+//     		board[availableSpots[randomNum][0]][availableSpots[randomNum][1]] = 2;
+    		coord[ 0 ] = availableSpots[ randomNum ][ 0 ];
+    		coord[ 1 ] = availableSpots[ randomNum ][ 1 ];
     	}
     	else
     	{
 			randomNum = rand.nextInt(bestSpotsLength);			// this gets a random number between 0 and bestSpotsLength
-			board[bestSpots[randomNum][0]][bestSpots[randomNum][1]] = 2;
+// 			board[bestSpots[randomNum][0]][bestSpots[randomNum][1]] = 2;
+			coord[ 0 ] = bestSpots[ randomNum ][ 0 ];
+    		coord[ 1 ] = bestSpots[ randomNum ][ 1 ];
 		}
 	}
 	
@@ -634,25 +628,15 @@ public class TicTacToe {
 	// Input: 
 	//		board	 - gameboard array. see board variable in main.
 	//		int		 - user input
-	//		location - input array where:
-	//					location[0] = row
-	//					location[1] = col
 	//
 	// Returns:
 	//		True  - space can be played
 	//		False - space is taken and cannot be played
 	//-----------------------------------------------------------
-	public static boolean isOpen(int[][] board, int input, int[] location)
+	public static boolean isOpen(int[][] board, int input)
 	{		
-		for (int i=1; i<=dim; i++)
-		{
-			if ( input < ( dim * i ) )
-			{
-				location[ 0 ] = ( i - 1 );
-				break;
-			}
-		}
-		location[ 1 ] = input % dim;
+		int[] location = new int[ 2 ];
+		boxNumToArray(input, location);
 		
 		if ( board[ location[ 0 ] ][ location[ 1 ] ] != 0 )
 		{
@@ -660,6 +644,32 @@ public class TicTacToe {
 			return false;
 		}
 		return true;
+	}
+
+	//-----------------------------------------------------------
+	// This function converts the number value of a square to the
+	// array value for that square.
+	//-----------------------------------------------------------
+	public static void boxNumToArray(int n, int[] location)
+	{
+		for (int i=1; i<=dim; i++)
+		{
+			if ( n < ( dim * i ) )
+			{
+				location[ 0 ] = ( i - 1 );
+				break;
+			}
+		}
+		location[ 1 ] = n % dim;
+	}
+	
+	//-----------------------------------------------------------
+	// This function converts the array value of a square to the
+	// number value for that square.
+	//-----------------------------------------------------------
+	public static int boxArrayToNum(int[] location)
+	{
+		return ( ( dim * location[ 0 ] ) + location[ 1 ] );
 	}
 
 	//-----------------------------------------------------------
