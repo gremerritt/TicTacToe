@@ -23,7 +23,8 @@ public class TicTacToe {
 		int[][] board = new int[dim][dim];
 		
 		String rawInput;
-		int[] input = {0, 0};
+		int input;
+		int location[] = new int[ 2 ];
 		int computerTurn;
 		boolean quit = false;
 		
@@ -33,16 +34,17 @@ public class TicTacToe {
 			
 			// get input and check it ------------------------
 			System.out.println("Enter the next \"X\" location (<row 1-" + dim + "> <col 1-" + dim + ">): ");
-			rawInput = sc.nextLine();	
-			if ( !checkInput(rawInput, input) )
+			rawInput = sc.nextLine();
+			input = Integer.parseInt(rawInput);
+			if ( !checkInput( input ) )
 				continue;
 			// -----------------------------------------------
 			
 			// check if this space is available
-			if ( !isOpen(board, input) )
+			if ( !isOpen(board, input, location) )
 				continue;
 			
-			board[input[0]][input[1]] = 1;
+			board[ location[ 0 ] ][ location[ 1 ] ] = 1;
 			
 			if ( isTie(board) )
 			{
@@ -625,22 +627,34 @@ public class TicTacToe {
 	}
 
 	//-----------------------------------------------------------
-	// This function checks if the space is available to play
+	// This function checks if the space is available to play.
+	// This is specifically designed for a 3x3 board and will
+	// not work otherwise
 	//
 	// Input: 
-	//		board - gameboard array. see board variable in main.
-	//		input - input array where:
-	//					input[0] = row
-	//					input[1] = col
+	//		board	 - gameboard array. see board variable in main.
+	//		int		 - user input
+	//		location - input array where:
+	//					location[0] = row
+	//					location[1] = col
 	//
 	// Returns:
 	//		True  - space can be played
 	//		False - space is taken and cannot be played
-	//
 	//-----------------------------------------------------------
-	public static boolean isOpen(int[][] board, int[] input)
-	{
-		if ( board[input[0]][input[1]] != 0 )
+	public static boolean isOpen(int[][] board, int input, int[] location)
+	{		
+		for (int i=1; i<=dim; i++)
+		{
+			if ( input < ( dim * i ) )
+			{
+				location[ 0 ] = ( i - 1 );
+				break;
+			}
+		}
+		location[ 1 ] = input % dim;
+		
+		if ( board[ location[ 0 ] ][ location[ 1 ] ] != 0 )
 		{
 			System.out.println("Already played!");
 			return false;
@@ -652,39 +666,19 @@ public class TicTacToe {
 	// This function checks the user input.
 	//
 	// Input:
-	//		rawInput - full user input string
-	//		input	 - input array where
-	//						input[0] = row
-	//						input[1] = col
+	//		input - user input
 	//
 	// Returns:
 	//		True  - input is good
 	//		False - input is bad
-	//
-	// If the input is good, the 'input' array will also be set.
-	// 		input[0] is the row value 0 - <dim-1>
-	// 		input[1] is the column value 0 - <dim-1>
-	//
 	//-----------------------------------------------------------
-	public static boolean checkInput(String rawInput, int[] input)
+	public static boolean checkInput(int input)
 	{
-		String[] split = rawInput.split("\\s+");
-	
-		if ( split.length != 2  )
+		if ( ( input < 0 ) || ( input >= ( dim * dim ) ) )
 		{
-			System.out.println("  Incorrect number of inputs!\n");
+			System.out.println("  Bad input value!\n");
 			return false;
 		}
-		
-		input[0] = (Integer.parseInt(split[0])) - 1;
-		input[1] = (Integer.parseInt(split[1])) - 1;
-		
-		if ( (input[0] < 0) || (input[0] > (dim - 1)) || (input[1] < 0) || (input[1] > (dim - 1)) )
-		{
-			System.out.println("  Bad row or column value!\n");
-			return false;
-		}
-		
 		return true;
 	}
 
