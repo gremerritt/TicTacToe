@@ -100,6 +100,10 @@ public class TicTacToe {
 		printBoard(board);
 	}
 	
+	//-----------------------------------------------------------
+	// This function makes a move for the given 'player' in the
+	// given 'square'.
+	//-----------------------------------------------------------
 	public static void makeMove(int[][] board, int square, int player)
 	{
 		int location[] = new int[ 2 ];
@@ -249,13 +253,13 @@ public class TicTacToe {
 		
 		// check if computer can win or block user from winning
 		if ( isOneAway(board, coord, 2) )
-			return boxArrayToNum( coord );
+			return boxArrayToNum(coord);
 			
 		if ( isOneAway(board, coord, 1) )
-			return boxArrayToNum( coord );
+			return boxArrayToNum(coord);
 		
 		computerMove(board, coord);
-		return boxArrayToNum( coord );
+		return boxArrayToNum(coord);
 	}
 	
 	//-----------------------------------------------------------
