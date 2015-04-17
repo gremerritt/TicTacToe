@@ -248,7 +248,10 @@ public class TicTacToe {
 		int[] coord = {0, 0};
 		
 		// check if computer can win or block user from winning
-		if ( ( isOneAway(board, coord, 2) ) ||  ( isOneAway(board, coord, 1) ) )
+		if ( isOneAway(board, coord, 2) )
+			return boxArrayToNum( coord );
+			
+		if ( isOneAway(board, coord, 1) )
 			return boxArrayToNum( coord );
 		
 		computerMove(board, coord);
