@@ -37,6 +37,7 @@ import java.util.Random;
 public class TicTacToe {
 	static Scanner sc = new Scanner(System.in);
 	public static final int dim = 3;
+	public static final int maxVal = (dim * dim) - 1;
 	
 	public static void main(String args[]) {
 		int[][] board = new int[dim][dim];
@@ -50,7 +51,7 @@ public class TicTacToe {
 			printBoard(board);
 			
 			// get input and check it ------------------------
-			System.out.println("Enter the next \"X\" location (<row 1-" + dim + "> <col 1-" + dim + ">): ");
+			System.out.println("Enter the next \"X\" location (0 - " + maxVal + "): ");
 			rawInput = sc.nextLine();
 			input = Integer.parseInt(rawInput);
 			if ( !checkInput( input ) )
