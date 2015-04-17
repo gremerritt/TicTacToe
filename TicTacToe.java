@@ -1,25 +1,44 @@
 import java.util.Scanner;
 import java.util.Random;
 
+
+//	This implements a text-based version of the classic tic-tac-toe game
+//	It should be easy to use functions from this game to create an Android version
+//		Most relevant functions (see the functions for more detailed information):
+//			isOpen			- (boolean)	checks if a square can be played in
+//			makeMove		- (void)	make a play in a specific box. this is the function that should
+// 										likely be updated so that it updates the UI.
+//			isTie			- (boolean)	checks if the board is in a tied state.
+//			isWin			- (boolean)	checks if the provided player has won.
+//			computerTurn	- (int)		returns the square that the computer will play in.
+//
+//	A few notes on variables:
+//		board:
+//			The board variable is an NxN (given by the 'dim' parameter)
+// 			multidimensional array of the current game board.
+//				Values: 	0 - Empty space
+// 							1 - Users space ("X")
+// 							2 - Computers space ("O")
+//
+// 			For example, if the board was:
+// 				  X O
+// 				X O 
+// 				O O X
+// 			then then array would be:
+// 				{{0,1,2},{1,2,0},{2,2,1}}
+//
+//		input (or any variable you use for the square to be played - eg. return value of computerTurn):
+//			This is a number in the range 0 to (dim * dim)-1.
+//			So for a traditional 3x3 board, this would be 0-8, numbered as follows:
+//				0 1 2
+//				3 4 5
+//				6 7 8
+
 public class TicTacToe {
 	static Scanner sc = new Scanner(System.in);
 	public static final int dim = 3;
 	
 	public static void main(String args[]) {
-		// the board variable is an NxN (given by the 'dim' parameter)
-		// multidimensional array of the current game board.
-		// 
-		// Values: 	0 - Empty space
-		//			1 - Users space ("X")
-		//			2 - Computers space ("O")
-		//
-		// For example, if the board was:
-		//		e X O
-		//		X O e
-		//		O O X
-		// then then array would be:
-		//		{{0,1,2},{1,2,0},{2,2,1}}
-		//
 		int[][] board = new int[dim][dim];
 		
 		String rawInput;
