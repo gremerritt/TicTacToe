@@ -55,26 +55,10 @@ public class TicTacToe3D {
 	public static final int dim = 3;
 	
 	public static void main(String args[]) {
-		// the board variable is an NxN (given by the 'dim' parameter)
-		// multidimensional array of the current game board.
-		// 
-		// Values: 	0 - Empty space
-		//			1 - Users space ("X")
-		//			2 - Computers space ("O")
-		//
-		// For example, if the board was:
-		//		e X O
-		//		X O e
-		//		O O X
-		// then then array would be:
-		//		{{0,1,2},{1,2,0},{2,2,1}}
-		//
 		int[][][] board = new int[dim][dim][dim];
 		
 		String rawInput;
 		int input;
-		int computerTurn;
-		boolean quit = false;
 		
 		// main game loop
 		while (true) {
@@ -112,8 +96,7 @@ public class TicTacToe3D {
 				break;
 			}
 
-			computerTurn = computerTurn(board);
-			makeMove(board, computerTurn, 2);
+			makeMove(board, computerTurn(board), 2);
 			
 			if ( isTie(board) )
 			{
