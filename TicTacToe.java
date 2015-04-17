@@ -5,12 +5,12 @@ import java.util.Random;
 //	This implements a text-based version of the classic tic-tac-toe game
 //	It should be easy to use functions from this game to create an Android version
 //		Most relevant functions (see the functions for more detailed information):
-//			isOpen			- (boolean)	checks if a square can be played in
-//			makeMove		- (void)	make a play in a specific box. this is the function that should
-// 										likely be updated so that it updates the UI.
-//			isTie			- (boolean)	checks if the board is in a tied state.
-//			isWin			- (boolean)	checks if the provided player has won.
-//			computerTurn	- (int)		returns the square that the computer will play in.
+//			isOpen			-	(boolean)	checks if a square can be played in
+//			makeMove		-	(void)		make a play in a specific box. this is the function that should
+// 											likely be updated so that it updates the UI.
+//			isTie			-	(boolean)	checks if the board is in a tied state.
+//			isWin			-	(boolean)	checks if the provided player has won.
+//			computerTurn	-	(int)		returns the square that the computer will play in.
 //
 //	A few notes on variables:
 //		board:
