@@ -54,12 +54,18 @@ public class TicTacToe {
 			rawInput = sc.nextLine();
 			input = Integer.parseInt(rawInput);
 			if ( !checkInput( input ) )
+			{
+				System.out.println("Bad input value!");
 				continue;
+			}
 			// -----------------------------------------------
 			
 			// check if this space is available
 			if ( !isOpen(board, input) )
+			{
+				System.out.println("Already played!");
 				continue;
+			}
 			
 			makeMove(board, input, 1);
 			
@@ -69,7 +75,7 @@ public class TicTacToe {
 				break;
 			}
 			
-			if ( isWin(board, 0) )
+			if ( isWin(board, 1) )
 			{
 				System.out.println("Congratulations! You win!");
 				break;
@@ -84,7 +90,7 @@ public class TicTacToe {
 				break;
 			}
 			
-			if ( isWin(board, 1) )
+			if ( isWin(board, 2) )
 			{
 				System.out.println("Uh oh! You lost.");
 				break;
@@ -108,8 +114,8 @@ public class TicTacToe {
 	// Input: 
 	//		board  - gameboard array. see board variable in main.
 	//		player - the player to check for a win:
-	//					0 - user
-	//					1 - computer
+	//					1 - user
+	//					2 - computer
 	//
 	// Returns:
 	//		True  - 'player' won
@@ -117,8 +123,6 @@ public class TicTacToe {
 	//-----------------------------------------------------------
     public static boolean isWin(int[][] board, int player)
     {
-    	player++;
-    	
     	// check horizontals
     	for (int i=0; i<dim; i++)
     	{
@@ -472,14 +476,12 @@ public class TicTacToe {
     	if ( bestSpotsLength == 0 )
     	{
     		randomNum = rand.nextInt(availableSpotsLength);		// this gets a random number between 0 and availableSpotsLength
-//     		board[availableSpots[randomNum][0]][availableSpots[randomNum][1]] = 2;
     		coord[ 0 ] = availableSpots[ randomNum ][ 0 ];
     		coord[ 1 ] = availableSpots[ randomNum ][ 1 ];
     	}
     	else
     	{
 			randomNum = rand.nextInt(bestSpotsLength);			// this gets a random number between 0 and bestSpotsLength
-// 			board[bestSpots[randomNum][0]][bestSpots[randomNum][1]] = 2;
 			coord[ 0 ] = bestSpots[ randomNum ][ 0 ];
     		coord[ 1 ] = bestSpots[ randomNum ][ 1 ];
 		}
@@ -656,10 +658,8 @@ public class TicTacToe {
 		boxNumToArray(input, location);
 		
 		if ( board[ location[ 0 ] ][ location[ 1 ] ] != 0 )
-		{
-			System.out.println("Already played!");
 			return false;
-		}
+		
 		return true;
 	}
 
@@ -702,10 +702,8 @@ public class TicTacToe {
 	public static boolean checkInput(int input)
 	{
 		if ( ( input < 0 ) || ( input >= ( dim * dim ) ) )
-		{
-			System.out.println("  Bad input value!\n");
 			return false;
-		}
+			
 		return true;
 	}
 
