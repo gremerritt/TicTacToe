@@ -1,6 +1,55 @@
 import java.util.Scanner;
 import java.util.Random;
 
+
+//	This implements a text-based version of the classic tic-tac-toe game
+//	It should be easy to use functions from this game to create an Android version
+//		Most relevant functions (see the functions for more detailed information):
+//			isOpen			-	(boolean)	checks if a square can be played in
+//			makeMove		-	(void)		make a play in a specific box. this is the function that should
+// 											likely be updated so that it updates the UI.
+//			isTie			-	(boolean)	checks if the board is in a tied state.
+//			isWin			-	(boolean)	checks if the provided player has won.
+//			computerTurn	-	(int)		returns the square that the computer will play in.
+//
+//	A few notes on variables:
+//		board:
+//			The board variable is an NxN (given by the 'dim' parameter)
+// 			multidimensional array of the current game board.
+//				Values: 	0 - Empty space
+// 							1 - Users space ("X")
+// 							2 - Computers space ("O")
+//
+// 			For example, if the board was:
+// 				  X O
+// 			   X  O 
+// 			  O   O   X
+//
+//				X X O
+//			   O     O
+//			  X   O   X
+//
+//			    X   X
+//			   O  O  
+//			  X   O   X
+// 			then then array would be:
+// 				{{{0,1,2},{1,2,0},{2,2,1}},{{1,1,0},{2,0,2},{1,2,1}},{{1,0,1},{2,2,0},{1,2,1}}}
+//
+//		input (or any variable you use for the square to be played - eg. return value of computerTurn):
+//			This is a number in the range 0 to (dim * dim)-1.
+//			So for a traditional 3x3 board, this would be 0-8, numbered as follows:
+//				0  1  2
+//			   3   4   5
+//			  6    7    8
+//
+//			    9 10 11
+//			   12 13  14
+//			  15  16   17
+//
+//			   18 19 20
+//			  21  22  23
+//			 24   25   26
+
 public class TicTacToe3D {
 	static Scanner sc = new Scanner(System.in);
 	public static final int dim = 3;
@@ -23,7 +72,7 @@ public class TicTacToe3D {
 		int[][][] board = new int[dim][dim][dim];
 		
 		String rawInput;
-		int[] input = {0, 0, 0};
+		int input;
 		int computerTurn;
 		boolean quit = false;
 		
@@ -34,15 +83,22 @@ public class TicTacToe3D {
 			// get input and check it ------------------------
 			System.out.println("Enter the next \"X\" location (<row 1-" + dim + "> <col 1-" + dim + ">): ");
 			rawInput = sc.nextLine();	
-			if ( !checkInput(rawInput, input) )
+			input = Integer.parseInt(rawInput);
+			if ( !checkInput(input) )
+			{
+				System.out.println("Bad input value!");
 				continue;
+			}
 			// -----------------------------------------------
 			
 			// check if this space is available
 			if ( !isOpen(board, input) )
+			{
+				System.out.println("Already played!");
 				continue;
+			}
 			
-			board[input[0]][input[1]][input[2]] = 1;
+			makeMove(board, input, 1);
 			
 			if ( isTie(board) )
 			{
@@ -57,24 +113,33 @@ public class TicTacToe3D {
 			}
 
 			computerTurn = computerTurn(board);
+			makeMove(board, computerTurn, 2);
 			
-			switch (computerTurn) {
-				case -1:
-					System.out.println("It's a tie!");
-					quit = true;
-					break;
-				case 1:
-					System.out.println("Uh oh! You lost.");
-					quit = true;
-					break;
-				default:
-					break;
-			}
-			if ( quit )
+			if ( isTie(board) )
+			{
+				System.out.println("It's a tie!");
 				break;
+			}
+			
+			if ( isWin(board, 2) )
+			{
+				System.out.println("Uh oh! You lost.");
+				break;
+			}
 		}
 		System.out.println("\nFinal board:");
 		printBoard(board);
+	}
+	
+	//-----------------------------------------------------------
+	// This function makes a move for the given 'player' in the
+	// given 'square'.
+	//-----------------------------------------------------------
+	public static void makeMove(int[][][] board, int square, int player)
+	{
+		int location[] = new int[ 3 ];
+		boxNumToArray(square, location);
+		board[ location[ 0 ] ][ location[ 1 ] ][ location[ 2 ] ] = player;
 	}
     
 	//-----------------------------------------------------------
@@ -172,6 +237,11 @@ public class TicTacToe3D {
     	return false;
     }
     
+	//-----------------------------------------------------------
+	// This is a helper function for isTie() to record the board
+	// row/column/diagonals/pillars that have certain values in
+	// them.
+	//-----------------------------------------------------------
 	public static void setTakenValue(boolean[][][] closedBoards, boolean[][] closedPillars, int i, int j, int k, int player)
 	{	
 		closedBoards[ i ][ j ][ player ] = true;
@@ -258,18 +328,17 @@ public class TicTacToe3D {
 	//-----------------------------------------------------------
 	public static int computerTurn(int[][][] board)
 	{
-		// first check if computer can win
-		if ( isOneAway(board, 2) )
-			return 1;
-		
-		// then check if computer can block user from winning
-		if ( !(isOneAway(board, 1)) )
-			computerMove(board);
-		
-		if ( isTie(board) )
-			return -1; 
-		else
-			return 0;
+		int[] coord = {0, 0, 0};
+	
+		// check if computer can win or block user from winning
+		if ( isOneAway(board, coord, 2) )
+			return boxArrayToNum(coord);
+			
+		if ( isOneAway(board, coord, 1) )
+			return boxArrayToNum(coord);
+
+		computerMove(board, coord);
+		return boxArrayToNum(coord);
 	}
 	
 	//-----------------------------------------------------------
@@ -280,7 +349,7 @@ public class TicTacToe3D {
 	// Input: 
 	//		board - gameboard array. see board variable in main.
 	//-----------------------------------------------------------
-	public static void computerMove(int[][][] board)
+	public static void computerMove(int[][][] board, int[] coord)
 	{
 		// this will be very similar to the isOneAway function
 		// except instead of stopping if we find more than one
@@ -553,12 +622,16 @@ public class TicTacToe3D {
     	if ( bestSpotsLength == 0 )
     	{
     		randomNum = rand.nextInt( availableSpotsLength );		// this gets a random number between 0 and availableSpotsLength
-    		board[ availableSpots[ randomNum ][ 0 ] ][ availableSpots[ randomNum ][ 1 ] ][ availableSpots[ randomNum ][ 2 ] ] = 2;
+    		coord[ 0 ] = availableSpots[ randomNum ][ 0 ];
+    		coord[ 1 ] = availableSpots[ randomNum ][ 1 ];
+    		coord[ 2 ] = availableSpots[ randomNum ][ 2 ];
     	}
     	else
     	{
 			randomNum = rand.nextInt(bestSpotsLength);			// this gets a random number between 0 and bestSpotsLength
-			board[ bestSpots[ randomNum ][ 0 ] ][ bestSpots[ randomNum ][ 1 ] ][ bestSpots[ randomNum ][ 2 ] ] = 2;
+			coord[ 0 ] = availableSpots[ randomNum ][ 0 ];
+    		coord[ 1 ] = availableSpots[ randomNum ][ 1 ];
+    		coord[ 2 ] = availableSpots[ randomNum ][ 2 ];
 		}
 	}
 	
@@ -568,6 +641,7 @@ public class TicTacToe3D {
 	//
 	// Input: 
 	//		board - gameboard array. see board variable in main.
+	//		coord - the space that either wins or blocks.
 	//		player - 1: check if computer can block
 	//				 2: check if computer can win
 	//
@@ -575,9 +649,8 @@ public class TicTacToe3D {
 	//		True  - computer can win/block
 	//		False - computer cannot win/block
 	//-----------------------------------------------------------
-	public static boolean isOneAway(int[][][] board, int player)
+	public static boolean isOneAway(int[][][] board, int[] coord, int player)
 	{
-		int[] coord = {0, 0, 0};
 		int opponent;
 		
 		if ( player == 1 )
@@ -773,56 +846,70 @@ public class TicTacToe3D {
 	//		False - space is taken and cannot be played
 	//
 	//-----------------------------------------------------------
-	public static boolean isOpen(int[][][] board, int[] input)
+	public static boolean isOpen(int[][][] board, int input)
 	{
-		if ( board[input[0]][input[1]][input[2]] != 0 )
-		{
-			System.out.println("Already played!");
+		int[] location = new int[ 3 ];
+		boxNumToArray(input, location);
+		
+		if ( board[ location[0] ][ location[ 1 ] ][ location[ 2 ] ] != 0 )
 			return false;
-		}
+		
 		return true;
+	}
+
+	//-----------------------------------------------------------
+	// This function converts the number value of a square to the
+	// array value for that square.
+	//-----------------------------------------------------------
+	public static void boxNumToArray(int n, int[] location)
+	{
+		for (int i=1; i<=dim; i++)
+		{
+			if ( n < ( dim * dim * i ) )
+			{
+				location[ 0 ] = ( i - 1 );
+				break;
+			}
+		}
+		
+		while ( n >= ( dim * dim ) )
+			n -= ( dim * dim );
+			
+		for (int i=1; i<=dim; i++)
+		{
+			if ( n < ( dim * i ) )
+			{
+				location[ 1 ] = ( i - 1 );
+				break;
+			}
+		}
+		location[ 2 ] = n % dim;
+	}
+	
+	//-----------------------------------------------------------
+	// This function converts the array value of a square to the
+	// number value for that square.
+	//-----------------------------------------------------------
+	public static int boxArrayToNum(int[] location)
+	{
+		return ( ( dim * dim * location[ 0 ] ) + ( dim * location[ 1 ] ) + ( location[ 2 ] ) );
 	}
 
 	//-----------------------------------------------------------
 	// This function checks the user input.
 	//
 	// Input:
-	//		rawInput - full user input string
-	//		input	 - input array where
-	//						input[0] = row
-	//						input[1] = col
+	//		input	 - user input
 	//
 	// Returns:
-	//		True  - input is good
+	//		True  - input is okay
 	//		False - input is bad
-	//
-	// If the input is good, the 'input' array will also be set.
-	// 		input[0] is the row value 0 - <dim-1>
-	// 		input[1] is the column value 0 - <dim-1>
-	//
 	//-----------------------------------------------------------
-	public static boolean checkInput(String rawInput, int[] input)
+	public static boolean checkInput(int input)
 	{
-		String[] split = rawInput.split("\\s+");
-	
-		if ( split.length != 3  )
-		{
-			System.out.println("  Incorrect number of inputs!\n");
+		if ( ( input < 0 ) || ( input >= ( dim * dim * dim ) ) )
 			return false;
-		}
-		
-		input[0] = (Integer.parseInt(split[0])) - 1;
-		input[1] = (Integer.parseInt(split[1])) - 1;
-		input[2] = (Integer.parseInt(split[2])) - 1;
-		
-		if ( (input[0] < 0) || (input[0] > (dim - 1)) || 
-			 (input[1] < 0) || (input[1] > (dim - 1)) ||
-			 (input[2] < 0) || (input[2] > (dim - 1)) )
-		{
-			System.out.println("  Bad row or column value!\n");
-			return false;
-		}
-		
+			
 		return true;
 	}
 
