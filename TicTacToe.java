@@ -24,9 +24,7 @@ public class TicTacToe {
 		
 		String rawInput;
 		int input;
-		int location[] = new int[ 2 ];
 		int computerTurn;
-		boolean quit = false;
 		
 		// main game loop
 		while (true) {
