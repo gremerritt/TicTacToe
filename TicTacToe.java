@@ -35,20 +35,20 @@ import java.util.Random;
 //				6 7 8
 
 public class TicTacToe {
-	static Scanner sc = new Scanner(System.in);
-	public static final int dim = 3;
-	public static final int maxVal = (dim * dim) - 1;
+	private static final int dim = 5;
+	private static int[][] board = new int[dim][dim];
 	
 	public static void main(String args[]) {
-		int[][] board = new int[dim][dim];
 		
 		String rawInput;
 		int input;
 		int computerTurn;
+		final int maxVal = (dim * dim) - 1;
+		Scanner sc = new Scanner(System.in);
 		
 		// main game loop
 		while (true) {
-			printBoard(board);
+			printBoard();
 			
 			// get input and check it ------------------------
 			System.out.println("Enter the next \"X\" location (0 - " + maxVal + "): ");
@@ -62,50 +62,50 @@ public class TicTacToe {
 			// -----------------------------------------------
 			
 			// check if this space is available
-			if ( !isOpen(board, input) )
+			if ( !isOpen(input) )
 			{
 				System.out.println("Already played!");
 				continue;
 			}
 			
-			makeMove(board, input, 1);
+			makeMove(input, 1);
 			
-			if ( isTie(board) )
+			if ( isTie() )
 			{
 				System.out.println("It's a tie!");
 				break;
 			}
 			
-			if ( isWin(board, 1) )
+			if ( isWin(1) )
 			{
 				System.out.println("Congratulations! You win!");
 				break;
 			}
 			
-			computerTurn = computerTurn(board);
-			makeMove(board, computerTurn, 2);
+			computerTurn = computerTurn();
+			makeMove(computerTurn, 2);
 			
-			if ( isTie(board) )
+			if ( isTie() )
 			{
 				System.out.println("It's a tie!");
 				break;
 			}
 			
-			if ( isWin(board, 2) )
+			if ( isWin(2) )
 			{
 				System.out.println("Uh oh! You lost.");
 				break;
 			}
 		}
 		System.out.println("\nFinal board:");
-		printBoard(board);
+		printBoard();
 	}
 	
 	//-----------------------------------------------------------
 	// This function makes a move for the given 'player' in the
 	// given 'square'.
 	//-----------------------------------------------------------
-	public static void makeMove(int[][] board, int square, int player)
+	public static void makeMove(int square, int player)
 	{
 		int location[] = new int[ 2 ];
 		boxNumToArray(square, location);
@@ -117,7 +117,6 @@ public class TicTacToe {
 	// won the game.
 	//
 	// Input: 
-	//		board  - gameboard array. see board variable in main.
 	//		player - the player to check for a win:
 	//					1 - user
 	//					2 - computer
@@ -126,7 +125,7 @@ public class TicTacToe {
 	//		True  - 'player' won
 	//		False - 'player' didn't win
 	//-----------------------------------------------------------
-    public static boolean isWin(int[][] board, int player)
+    public static boolean isWin(int player)
     {
     	// check horizontals
     	for (int i=0; i<dim; i++)
@@ -193,7 +192,7 @@ public class TicTacToe {
 	//		True  - tie
 	//		False - not a tie
 	//-----------------------------------------------------------
-    public static boolean isTie(int[][] board)
+    public static boolean isTie()
     {
     	boolean[][] taken = new boolean[ ( dim * 2 ) + 2 ][ 2 ];
     	
@@ -242,24 +241,21 @@ public class TicTacToe {
 	//		- If the computer can win, it will
 	//		- Else, the computer will pick a move
 	//
-	// Input: 
-	//		board - gameboard array. see board variable in main.
-	//
 	// Returns:
 	//		square that the computer will play
 	//-----------------------------------------------------------
-	public static int computerTurn(int[][] board)
+	public static int computerTurn()
 	{
 		int[] coord = {0, 0};
 		
 		// check if computer can win or block user from winning
-		if ( isOneAway(board, coord, 2) )
+		if ( isOneAway(coord, 2) )
 			return boxArrayToNum(coord);
 			
-		if ( isOneAway(board, coord, 1) )
+		if ( isOneAway(coord, 1) )
 			return boxArrayToNum(coord);
 		
-		computerMove(board, coord);
+		computerMove(coord);
 		return boxArrayToNum(coord);
 	}
 	
@@ -269,10 +265,9 @@ public class TicTacToe {
 	// makes a move there.
 	//
 	// Input: 
-	//		board - gameboard array. see board variable in main.
 	//		coord - the space that the computer will play.
 	//-----------------------------------------------------------
-	public static void computerMove(int[][] board, int[] coord)
+	public static void computerMove(int[] coord)
 	{
 		// this will be very similar to the isOneAway function
 		// except instead of stopping if we find more than one
@@ -501,7 +496,6 @@ public class TicTacToe {
 	// the game, or block the user from winning the game.
 	//
 	// Input: 
-	//		board - gameboard array. see board variable in main.
 	//		coord - the space that either wins or blocks.
 	//		player - 1: check if computer can block
 	//				 2: check if computer can win
@@ -511,7 +505,7 @@ public class TicTacToe {
 	//		False - computer cannot win/block
 	//
 	//-----------------------------------------------------------
-	public static boolean isOneAway(int[][] board, int[] coord, int player)
+	public static boolean isOneAway(int[] coord, int player)
 	{
 		int opponent;
 		
@@ -653,14 +647,13 @@ public class TicTacToe {
 	// not work otherwise
 	//
 	// Input: 
-	//		board	 - gameboard array. see board variable in main.
-	//		int		 - user input
+	//		input - user input
 	//
 	// Returns:
-	//		True  - space can be played
-	//		False - space is taken and cannot be played
+	//		true  - space can be played
+	//		false - space is taken and cannot be played
 	//-----------------------------------------------------------
-	public static boolean isOpen(int[][] board, int input)
+	public static boolean isOpen(int input)
 	{		
 		int[] location = new int[ 2 ];
 		boxNumToArray(input, location);
@@ -719,7 +712,7 @@ public class TicTacToe {
 	// This function prints the current game board
 	//
 	//-----------------------------------------------------------
-    public static void printBoard(int[][] board)
+    public static void printBoard()
     {
     	String display = "";
     	
