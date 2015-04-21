@@ -35,7 +35,7 @@ import java.util.Random;
 //				6 7 8
 
 public class TicTacToe {
-	private static final int dim = 5;
+	private static final int dim = 3;
 	private static int[][] board = new int[dim][dim];
 	
 	public static void main(String args[]) {
