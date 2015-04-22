@@ -1,9 +1,6 @@
 import java.util.Scanner;
 import java.util.Random;
 
-//	THIS IS NOT ENTIRLY FUNCTIONAL YET. THIS DOESN'T ALWAYS RECOGNIZE A WIN,
-//	AND DOESN'T ALWAYS MAKE LOGICAL COMPUTER MOVES.
-//
 //	This implements a text-based version of the classic tic-tac-toe game
 //	It should be easy to use functions from this game to create an Android version
 //		Most relevant functions (see the functions for more detailed information):
@@ -208,9 +205,9 @@ public class TicTacToe3D {
 			{
 				if ( board[ 0 ][ j ][ k ] == player )
 				{
-					for (int i=0; i<dim; i++)
+					for (int i=1; i<dim; i++)
 					{
-						if ( board[ i ][ j ][ j ] != player )
+						if ( board[ i ][ j ][ k ] != player )
 							break;
 						
 						if ( i == ( dim - 1 ) )
