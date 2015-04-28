@@ -1,6 +1,4 @@
-import java.util.Scanner;
 import java.util.Random;
-
 
 //	This implements a text-based version of the classic tic-tac-toe game
 //	It should be easy to use functions from this game to create an Android version
@@ -38,67 +36,43 @@ public class TicTacToe {
 	private static final int dim = 3;
 	private static int[][] board = new int[dim][dim];
 	
-	public static void main(String args[]) {
+	//-----------------------------------------------------------
+	//	Play a turn in the game.
+	//	
+	//	Input:
+	//		1 - (dim*dim)
+	//
+	//	Return value:
+	//		100 - the square played is already taken
+	//		101 - the game is tied
+	//		102 - the user won
+	//		-1 to -[(dim*dim)] - square the computer wins on
+	//		1 to (dim*dim) - the square the computer plays
+	//-----------------------------------------------------------
+	public static int turn(int square)
+	{
+		int move = square - 1;
+	
+		// check if this space is available
+		if ( !isOpen(move) )
+			return 100;
 		
-		String rawInput;
-		int input;
-		int computerTurn;
-		final int maxVal = (dim * dim) - 1;
-		Scanner sc = new Scanner(System.in);
+		makeMove(move, 1);
 		
-		// main game loop
-		while (true) {
-			printBoard();
+		if ( isTie() )
+			return 101;
+		else if ( isWin(1) )
+			return 102;
 			
-			// get input and check it ------------------------
-			System.out.println("Enter the next \"X\" location (0 - " + maxVal + "): ");
-			rawInput = sc.nextLine();
-			input = Integer.parseInt(rawInput);
-			if ( !checkInput( input ) )
-			{
-				System.out.println("Bad input value!");
-				continue;
-			}
-			// -----------------------------------------------
-			
-			// check if this space is available
-			if ( !isOpen(input) )
-			{
-				System.out.println("Already played!");
-				continue;
-			}
-			
-			makeMove(input, 1);
-			
-			if ( isTie() )
-			{
-				System.out.println("It's a tie!");
-				break;
-			}
-			
-			if ( isWin(1) )
-			{
-				System.out.println("Congratulations! You win!");
-				break;
-			}
-			
-			computerTurn = computerTurn();
-			makeMove(computerTurn, 2);
-			
-			if ( isTie() )
-			{
-				System.out.println("It's a tie!");
-				break;
-			}
-			
-			if ( isWin(2) )
-			{
-				System.out.println("Uh oh! You lost.");
-				break;
-			}
-		}
-		System.out.println("\nFinal board:");
-		printBoard();
+		int computerTurn = computerTurn();
+		makeMove(computerTurn, 2);
+		
+		if ( isTie() )
+			return 101;
+		else if ( isWin(2) )
+			return ( 0 - ( computerTurn + 1 ) );
+		else
+			return computerTurn;
 	}
 	
 	//-----------------------------------------------------------
@@ -707,53 +681,4 @@ public class TicTacToe {
 			
 		return true;
 	}
-
-	//-----------------------------------------------------------
-	// This function prints the current game board
-	//
-	//-----------------------------------------------------------
-    public static void printBoard()
-    {
-    	String display = "";
-    	
-    	for (int i=0; i<dim; i++)
-    		display += " _____";
-    	System.out.println(display);
-    	display = "";
-    		
-    	for (int i=0; i<dim; i++)
-    	{
-    		for (int k=0; k<dim; k++)
-    			display += "|     ";
-    		display += "|";
-    		System.out.println(display);
-    		display = "";
-    		
-    		for (int j=0; j<dim; j++)
-    		{
-    			switch (board[i][j]) {
-    				case 0:
-    					display += "|     ";
-    					break;
-    				case 1:
-    					display += "|  X  ";
-    					break;
-    				case 2:
-    					display += "|  O  ";
-    					break;
-    				default:
-    					break;
-    			}
-    		}
-    		display += "|";
-    		System.out.println(display);
-    		display = "";
-    		
-    		for (int k=0; k<dim; k++)
-    			display += "|_____";
-    		display += "|";
-    		System.out.println(display);
-    		display = "";
-    	}
-    }
 }
