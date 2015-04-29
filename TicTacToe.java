@@ -40,14 +40,15 @@ public class TicTacToe {
 	//	Play a turn in the game.
 	//	
 	//	Input:
-	//		1 - (dim*dim)
+	//		square - square the user plays in (0-dim)
 	//
 	//	Return value:
-	//		100 - the square played is already taken
-	//		101 - the game is tied
-	//		102 - the user won
-	//		-1 to -[(dim*dim)] - square the computer wins on
-	//		1 to (dim*dim) - the square the computer plays
+	//		-2 - the square played is already taken
+	//		-1 - the game tied on the user's play
+	//		0  - the user won
+	//		1 to (dim*dim) - computer's turn (no win and no tie) (i.e. 1-9)
+	//		(dim*dim)+1 to 2*(dim*dim) - the square the computer plays on to win (i.e. 10-18)
+	//		(2*(dim*dim))+1 to 3*(dim*dim) - the square the computer plays on to tie (i.e. 19-27)
 	//-----------------------------------------------------------
 	public static int turn(int square)
 	{
@@ -55,24 +56,24 @@ public class TicTacToe {
 	
 		// check if this space is available
 		if ( !isOpen(move) )
-			return 100;
+			return -2;
 		
 		makeMove(move, 1);
 		
 		if ( isTie() )
-			return 101;
+			return -1;
 		else if ( isWin(1) )
-			return 102;
+			return 0;
 			
 		int computerTurn = computerTurn();
 		makeMove(computerTurn, 2);
 		
 		if ( isTie() )
-			return 101;
+			return ( computerTurn + 1 + ( 2 * ( dim * dim ) ) );
 		else if ( isWin(2) )
-			return ( 0 - ( computerTurn + 1 ) );
+			return ( computerTurn + 1 + ( dim * dim ) );
 		else
-			return computerTurn;
+			return computerTurn + 1;
 	}
 	
 	//-----------------------------------------------------------
