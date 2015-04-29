@@ -40,7 +40,7 @@ public class TicTacToe {
 	//	Play a turn in the game.
 	//	
 	//	Input:
-	//		square - square the user plays in (0-dim)
+	//		square - square the user plays in (1-dim)
 	//
 	//	Return value:
 	//		-2 - the square played is already taken
